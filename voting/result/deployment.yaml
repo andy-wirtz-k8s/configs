@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: result
+  name: result
+  namespace: voting
+spec:
+  minReadySeconds: 10
+  replicas: 3
+  selector:
+    matchLabels:
+      app: result
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+    type: RollingUpdate  
+  template:
+    metadata:
+      labels:
+        app: result
+    spec:
+      containers:
+      - image: andywirtzk8s/voting-result:v1.0
+        name: result
+        envFrom:
+        - prefix: OPTION_
+          configMapRef:
+            name: options
+        - prefix: POSTGRES_
+          secretRef:
+            name: db-secret
+        livenessProbe:
+          httpGet:
+            path: /
+            port: http
+        livenessProbe:
+          httpGet:
+            path: /
+            port: http
+        ports:
+        - containerPort: 8080
+          name: http

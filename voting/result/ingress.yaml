@@ -1,0 +1,21 @@
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  labels:
+    app: result
+  name: result
+  namespace: voting
+spec:
+  rules:
+  - host: result.voting.atix-training.de
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: result
+          servicePort: 8080
+  tls:
+  - hosts:
+    - result.voting.atix-training.de
+    secretName: tls

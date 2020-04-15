@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: vote
+  name: vote
+  namespace: voting
+spec:
+  type: ClusterIP
+  ports:
+  - name: vote
+    port: 8080
+    targetPort: http
+  selector:
+    app: vote

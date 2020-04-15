@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    atix.de/technique: declarative object configuration
+  labels:
+    app: vote
+    technique: declarative
+  name: vote
+  namespace: voting
+spec:
+  minReadySeconds: 10
+  replicas: 3
+  selector:
+    matchLabels:
+      app: vote
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: vote
+    spec:
+      containers:
+      - image: andywirtzk8s/voting-vote:v1.0
+        name: vote
+        envFrom:
+        - prefix: OPTION_
+          configMapRef:
+            name: options
+        livenessProbe:
+           httpGet:
+             path: /
+             port: http
+        readinessProbe:
+           httpGet:
+             path: /
+             port: http
+        ports:
+        - containerPort: 8080
+          name: http
