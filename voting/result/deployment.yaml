@@ -31,6 +31,9 @@ spec:
         - prefix: POSTGRES_
           secretRef:
             name: db-secret
+        env:
+        - name: POSTGRES_HOST
+          value: db
         livenessProbe:
           httpGet:
             path: /
